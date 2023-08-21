@@ -1,6 +1,8 @@
+"use client";
 import Link from "next/link";
 import Image from "next/image";
 import { formatDateString } from "@lib/utils";
+import { usePathname } from "next/navigation";
 
 interface Props {
   id: string;
@@ -38,6 +40,8 @@ const ThreadCard = (props: Props) => {
     comments,
     isComment,
   } = props;
+
+  const pathname = usePathname();
   return (
     <article
       className={`flex w-full flex-col rounded-xl  ${
@@ -99,7 +103,7 @@ const ThreadCard = (props: Props) => {
                 />
               </div>
 
-              {comments.length > 0 && (
+              {pathname !== `/thread/${id}` && comments.length > 0 && (
                 <Link href={`/thread/${id}`}>
                   <p className="mt-1 text-subtle-medium text-gray-1">
                     {comments.length} repl{comments.length > 1 ? "ies" : "y"}
