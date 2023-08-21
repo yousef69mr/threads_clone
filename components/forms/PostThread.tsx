@@ -9,6 +9,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Loader2 } from "lucide-react";
 
+import { useOrganization } from "@clerk/nextjs";
+
 import {
   Form,
   FormControl,
@@ -33,6 +35,8 @@ const PostThread = (props: ThreadParams) => {
   const router = useRouter();
   const pathname = usePathname();
 
+  const { organization } = useOrganization();
+
   const [submiting, setSubmiting] = useState(false);
   //   const { startUpload } = useUploadThing("media");
 
@@ -53,7 +57,7 @@ const PostThread = (props: ThreadParams) => {
       await createThread({
         text: values.thread,
         author: values.accountId,
-        communityId: null,
+        communityId: organization ? organization.id : null,
         path: pathname,
       });
 
