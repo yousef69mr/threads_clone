@@ -1,5 +1,7 @@
 ﻿# Threads Clone
 
+![Home Page](/public/threads_clone.png)
+
 ## Preview link : https://threads-clone-iota.vercel.app/
 
 ### Description: A Next js Social media platform to share threads with friends and communities
