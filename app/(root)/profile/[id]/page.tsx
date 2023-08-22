@@ -30,7 +30,7 @@ const Page = async (props: Props) => {
     <section>
       <ProfileHeader
         accountId={userInfo.id}
-        authUserId={userInfo.id}
+        authUserId={user.id}
         name={userInfo.name}
         username={userInfo.username}
         imgUrl={userInfo.image}

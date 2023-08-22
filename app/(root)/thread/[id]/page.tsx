@@ -34,13 +34,13 @@ const page = async (props: Props) => {
     <section className="relative">
       <div>
         <ThreadCard
-          id={thread._id}
+          id={JSON.stringify(thread._id)}
           currentUserId={user?.id || ""}
           parentId={thread.parentId}
           content={thread.text}
           author={thread.author}
           community={thread.community}
-          createdAt={thread.createAt}
+          createdAt={thread.createdAt}
           comments={thread.children}
         />
       </div>
@@ -56,7 +56,7 @@ const page = async (props: Props) => {
         {thread.children.map((childItem: any) => (
           <ThreadCard
             key={childItem._id}
-            id={childItem._id}
+            id={JSON.stringify(childItem._id)}
             currentUserId={user.id}
             parentId={childItem.parentId}
             content={childItem.text}

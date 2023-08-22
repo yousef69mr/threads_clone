@@ -1,8 +1,17 @@
-"use client";
+// "use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import { formatDateString } from "@lib/utils";
-import { usePathname } from "next/navigation";
+
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@components/ui/tooltip";
+
+// import { usePathname } from "next/navigation";
 
 interface Props {
   id: string;
@@ -41,7 +50,8 @@ const ThreadCard = (props: Props) => {
     isComment,
   } = props;
 
-  const pathname = usePathname();
+  // const pathname = usePathname();
+
   return (
     <article
       className={`flex w-full flex-col rounded-xl  ${
@@ -78,7 +88,7 @@ const ThreadCard = (props: Props) => {
                   width={24}
                   className="object-contain cursor-pointer"
                 />
-                <Link href={`/thread/${id}`}>
+                <Link href={`/thread/${JSON.parse(id)}`}>
                   <Image
                     src={"/assets/reply.svg"}
                     alt="reply"
@@ -103,40 +113,57 @@ const ThreadCard = (props: Props) => {
                 />
               </div>
 
-              {pathname !== `/thread/${id}` && comments.length > 0 && (
-                <Link href={`/thread/${id}`}>
-                  <p className="mt-1 text-subtle-medium text-gray-1">
-                    {comments.length} repl{comments.length > 1 ? "ies" : "y"}
-                  </p>
-                </Link>
-              )}
+              {
+                /*pathname !== `/thread/${id}` && */ comments.length > 0 && (
+                  <Link href={`/thread/${JSON.parse(id)}`}>
+                    <p className="mt-1 text-subtle-medium text-gray-1">
+                      {comments.length} repl{comments.length > 1 ? "ies" : "y"}
+                    </p>
+                  </Link>
+                )
+              }
             </div>
           </div>
         </div>
 
         {/* todo:  Delete Thread */}
         {/* todo :show comment logos */}
-
-        {!isComment && community && (
-          <Link
-            href={`/communities/${community.id}`}
-            className="mt-5 flex items-center"
-          >
-            <p className="text-subtle-medium text-gray-1">
-              {formatDateString(createdAt)} - {community.name} Community
-            </p>
-
-            <div className="relative ml-1 w-14 h-14">
-              <Image
-                src={community.image}
-                alt={`${community.name}_image`}
-                fill
-                className="rounded-full object-cover"
-              />
-            </div>
-          </Link>
-        )}
       </div>
+      {!isComment && community && (
+        <Link
+          href={`/communities/${community.id}`}
+          className="mt-5 flex items-center"
+        >
+          <p className="text-subtle-medium text-gray-1">
+            {formatDateString(createdAt)} - {community.name} Community
+          </p>
+
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>
+                <div className="relative ml-1 w-6 h-6">
+                  <Image
+                    src={community.image}
+                    alt={`${community.name}_image`}
+                    fill
+                    className="rounded-full object-cover"
+                  />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent className="p-0">
+                <div className="relative w-14 h-14">
+                  <Image
+                    src={community.image}
+                    alt={`${community.name}_image`}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </Link>
+      )}
     </article>
   );
 };

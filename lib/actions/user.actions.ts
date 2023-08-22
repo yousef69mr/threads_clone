@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { connectToDB } from "@lib/mongoose";
 import User from "@lib/models/user.model";
 import Thread from "@lib/models/thread.model";
+import Community from "@lib/models/community.model";
 import { FilterQuery, SortOrder } from "mongoose";
 
 interface UserParams {
@@ -44,11 +45,10 @@ export async function updateUser(user: UserParams): Promise<void> {
 export async function fetchUser(userId: string) {
   try {
     await connectToDB();
-    return await User.findOne({ id: userId });
-    // .populate({
-    //   path: "communities",
-    //   model: "Community",
-    // });
+    return await User.findOne({ id: userId }).populate({
+      path: "communities",
+      model: Community,
+    });
   } catch (error: any) {
     throw new Error(`Failed to fetch user: ${error.message}`);
   }
@@ -62,11 +62,22 @@ export async function fetchUserPosts(userId: string) {
     const threads = await User.findOne({ id: userId }).populate({
       path: "threads",
       model: Thread,
-      populate: {
-        path: "author",
-        model: User,
-        select: "id name image",
-      },
+      populate: [
+        {
+          path: "community",
+          model: Community,
+          select: "name id image _id", // Select the "name" and "_id" fields from the "Community" model
+        },
+        {
+          path: "children",
+          model: Thread,
+          populate: {
+            path: "author",
+            model: User,
+            select: "name image id", // Select the "name" and "_id" fields from the "User" model
+          },
+        },
+      ],
     });
 
     return threads;
@@ -80,7 +91,7 @@ export async function fetchUsers(params: {
   searchString?: string;
   pageSize?: number;
   pageNumber?: number;
-  sortBy: SortOrder;
+  sortBy?: SortOrder;
 }) {
   const {
     userId,

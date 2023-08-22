@@ -1,9 +1,19 @@
-import { OrganizationSwitcher, SignedIn, SignOutButton } from "@clerk/nextjs";
+import {
+  currentUser,
+  OrganizationSwitcher,
+  SignedIn,
+  SignOutButton,
+  // UserButton,
+} from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import Image from "next/image";
 import Link from "next/link";
 
-function Topbar() {
+import { Button } from "@components/ui/button";
+
+async function Topbar() {
+  const user = await currentUser();
+
   return (
     <nav className="topbar">
       <Link href="/" className="flex items-center gap-4">
@@ -12,6 +22,12 @@ function Topbar() {
       </Link>
 
       <div className="flex items-center gap-1">
+        {!user && (
+          <Link href={`/sign-in`}>
+            <Button className="bg-primary-500">Login</Button>
+          </Link>
+        )}
+
         <div className="block md:hidden">
           <SignedIn>
             <SignOutButton>
